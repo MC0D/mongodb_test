@@ -31,4 +31,45 @@ const createOrder = async (orderData) => {
     return await newOrder.save();
   };
 
-export{ createOrder}
+  const getAllOrders = async () => {
+    return await Order.find()
+      .populate('customer_id') 
+      .populate('products.product');
+  };
+  
+  const getOrderById = async (id) => {
+    const order = await Order.findById(id)
+      .populate('customer_id')
+      .populate('products.product');
+      
+    if (!order) {
+      throw new Error('Commande introuvable');
+    }
+  
+    return order;
+  };
+  
+  const updateOrderStatus = async (id, status) => {
+    const order = await Order.findByIdAndUpdate(id, { order_status: status }, { new: true });
+    if (!order) {
+      throw new Error('Commande introuvable');
+    }
+    return order;
+  };
+  
+  const deleteOrder = async (id) => {
+    const order = await Order.findByIdAndDelete(id);
+    if (!order) {
+      throw new Error('Commande introuvable');
+    }
+    return order;
+  };
+
+
+
+
+
+
+
+
+export{ createOrder, getAllOrders,getOrderById,updateOrderStatus,deleteOrder}
